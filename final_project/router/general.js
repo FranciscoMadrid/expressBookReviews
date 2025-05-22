@@ -17,27 +17,71 @@ public_users.get('/',function (req, res) {
 });
 
 // Get book details based on ISBN
-public_users.get('/isbn/:isbn',function (req, res) {
-  let isbn_search = req.query.isbn;
-  return res.status(300).json({message: "Yet to be implemented"});
- });
+public_users.get('/isbn/:isbn', function (req, res) {
+  const { isbn } = req.params;
+
+  if (!isbn) {
+    return res.status(400).json({ message: `ISBN is required in the URL parameter` });
+  }
+
+  let result = Object.values(books).filter((book) => book.isbn === isbn);
+
+  if (result.length === 0) {
+    return res.status(404).json({ message: `No book found with ISBN ${isbn}` });
+  }
+
+  res.send({ result });
+});
   
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+  const { author } = req.params;
+
+  if (!author) {
+    return res.status(400).json({ message: `Author is required in the URL parameter` });
+  }
+
+  let result = Object.values(books).filter((book) => book.author === author);
+  
+  if (result.length === 0) {
+    return res.status(404).json({ message: `No book found with Author ${author}` });
+  }
+
+  res.send({ result });
 });
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+    const { title } = req.params;
+
+  if (!title) {
+    return res.status(400).json({ message: `title is required in the URL parameter` });
+  }
+
+  let result = Object.values(books).filter((book) => book.title === title);
+  
+  if (result.length === 0) {
+    return res.status(404).json({ message: `No book found with title ${title}` });
+  }
+
+  res.send({ result });
 });
 
 //  Get book review
 public_users.get('/review/:isbn',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+  const { isbn } = req.params;
+
+  if (!isbn) {
+    return res.status(400).json({ message: `ISBN is required in the URL parameter` });
+  }
+
+  let result = Object.values(books).find((book) => book.isbn === isbn);
+
+  if (result.length === 0) {
+    return res.status(404).json({ message: `No book found with ISBN ${isbn}` });
+  }
+
+  res.send({ reviews: result.reviews });
 });
 
 module.exports.general = public_users;
